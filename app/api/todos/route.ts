@@ -1,6 +1,6 @@
 import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET() {
   try {
@@ -15,7 +15,7 @@ export async function GET() {
     );
   }
 }
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { name, description, tags, completed, priority } = body;
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
   try {
     const { _id } = await req.json();
     if (!_id) {

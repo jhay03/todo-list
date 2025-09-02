@@ -1,9 +1,9 @@
 import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -44,7 +44,7 @@ export async function PATCH(
 }
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
