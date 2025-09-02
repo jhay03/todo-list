@@ -1,14 +1,13 @@
 import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
 import { NextResponse, NextRequest } from "next/server";
-import type { RouteContext } from "@/types"; // Adjust if needed
 
 export async function PATCH(
   req: NextRequest,
-  context: RouteContext<"/api/todos/[id]">
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
     const body = await req.json();
     const { name, description, tags, completed, priority } = body;
 
@@ -46,10 +45,10 @@ export async function PATCH(
 
 export async function PUT(
   req: NextRequest,
-  context: RouteContext<"/api/todos/[id]">
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
     const body = await req.json();
     const { completed } = body;
 
@@ -85,26 +84,30 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  context: RouteContext<"/api/todos/[id]">
-) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { id } = await context.params;
-
-    await connectToMongoDB();
-    const deleted = await TodoItem.findByIdAndDelete(id);
-
-    if (!deleted) {
-      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+    const { _id } = await req.json();
+    if (!_id) {
+      return NextResponse.json(
+        { message: "Missing required fields _id" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ message: "Todo deleted" }, { status: 200 });
+    await connectToMongoDB();
+    const deleted = await TodoItem.findByIdAndDelete(_id);
+
+    if (!deleted) {
+      return NextResponse.json({ message: "_id not found " }, { status: 404 });
+    }
+    return NextResponse.json({ message: "Todo deleted" }, { status: 201 });
   } catch (error) {
-    console.error("[TODO_DELETE_ERROR]", error);
+    console.log(error, "error in DELETE /api/todos");
     return NextResponse.json(
-      { message: "An error occurred while deleting the todo" },
+      { message: "An error occurred while deleting the todo " },
       { status: 500 }
     );
   }
 }
+
+export default { PATCH, PUT, DELETE };

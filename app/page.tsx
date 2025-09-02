@@ -4,6 +4,7 @@ import ListOfTodo from "@/components/todo/list";
 import { Flex, Text, Container, Heading, Badge } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import NoTodo from "@/components/todo/no-todo";
 
 export default function MyApp() {
   const [completedCount, setCompletedCount] = useState<number>(0);
@@ -27,11 +28,18 @@ export default function MyApp() {
           To-Do List Application
           <CreateToDo setTodos={setTodos} />
         </Heading>
-        <Text color="gray">Here are your To do this day! </Text>
-        <Text color="gray" style={{ float: "right" }}>
-          Completed Tasks : <Badge color="iris"> {completedCount}</Badge>
-        </Text>
+        {todos.length > 0 ? (
+          <>
+            <Text color="gray">Here are your To do this day! </Text>
+            <Text color="gray" style={{ float: "right" }}>
+              Completed Tasks : <Badge color="iris"> {completedCount}</Badge>
+            </Text>
+          </>
+        ) : (
+          <NoTodo />
+        )}
       </Flex>
+
       <ListOfTodo items={todos} setTodos={setTodos} />
     </Container>
   );
