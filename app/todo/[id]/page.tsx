@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
+  AlertDialog,
   Button,
   Card,
   CheckboxGroup,
@@ -37,6 +38,8 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
   const [selectedValue, setSelectedValue] = useState<string[]>([]);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [open, setOpen] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [initialValue, setInitialValue] = useState<TodoItem | null>(null);
 
   useEffect(() => {
     axios.get("/api/todos").then((response: any) => {
@@ -53,6 +56,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
         _id: foundTodo._id,
         name: foundTodo.name,
       });
+      setInitialValue({ ...foundTodo });
       setSelectedValue([...foundTodo.tags]);
     }
   }, [id, todos]);
@@ -100,6 +104,14 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
     } catch (error) {
       console.error("Error updating todo:", error);
     }
+  };
+
+  const handleCancelButton = () => {
+    if (initialValue) {
+      setInputValue({ ...initialValue });
+      setSelectedValue([...initialValue.tags]);
+    }
+    setOpen(false);
   };
 
   if (!inputValue) return null;
@@ -159,10 +171,39 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
               color="red"
               style={{ float: "right" }}
               variant="outline"
-              onClick={() => handleDelete(inputValue._id)}
+              onClick={() => setOpenAlert(true)}
             >
               <TrashIcon />
             </Button>
+
+            {/* Delete Dialog */}
+            <AlertDialog.Root open={openAlert} onOpenChange={setOpenAlert}>
+              <AlertDialog.Content maxWidth="450px">
+                <AlertDialog.Title>
+                  Ticket#{inputValue?._id} will be deleted
+                </AlertDialog.Title>
+                <AlertDialog.Description size="2">
+                  Are you sure? This ticket will be deleted.
+                </AlertDialog.Description>
+
+                <Flex gap="3" mt="4" justify="end">
+                  <AlertDialog.Cancel>
+                    <Button variant="soft" color="gray">
+                      Cancel
+                    </Button>
+                  </AlertDialog.Cancel>
+                  <AlertDialog.Action>
+                    <Button
+                      variant="solid"
+                      color="red"
+                      onClick={() => handleDelete(inputValue._id)}
+                    >
+                      Delete
+                    </Button>
+                  </AlertDialog.Action>
+                </Flex>
+              </AlertDialog.Content>
+            </AlertDialog.Root>
           </div>
         </Card>
       </Container>
@@ -236,7 +277,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
 
           <Flex gap="3" mt="4" justify="end">
             <Dialog.Close>
-              <Button variant="soft" color="gray">
+              <Button variant="soft" color="gray" onClick={handleCancelButton}>
                 Cancel
               </Button>
             </Dialog.Close>

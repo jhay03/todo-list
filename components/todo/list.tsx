@@ -5,6 +5,7 @@ import { TodoItem } from "../utils/interface/ToDoItem";
 import { renderPriority, renderTags } from "../utils/constant";
 import axios from "axios";
 import { TodoType } from "@/app/page";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
 type ListOfTodoProps = {
   items: TodoType[];
   setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
@@ -48,14 +49,20 @@ const ListOfTodo = ({ items, setTodos }: ListOfTodoProps) => {
             <Flex gap="2">Tags: {renderTags(todo?.tags)}</Flex>
             <Text>Priority: {renderPriority(todo?.priority)}</Text>
           </Flex>
-          <Button
-            mt="2"
-            variant={todo?.completed ? "solid" : "outline"}
-            size="2"
-            onClick={() => handleCompleted(todo?._id || "")}
-          >
-            {todo?.completed ? "Mark as Inprogress" : "Mark as Done"}
-          </Button>
+          <div style={{ marginTop: "2px" }}>
+            <Button
+              variant={todo?.completed ? "solid" : "outline"}
+              size="2"
+              onClick={() => handleCompleted(todo?._id || "")}
+            >
+              {todo?.completed ? "Mark as Inprogress" : "Mark as Done"}
+            </Button>
+            <Button color="blue" variant="solid" style={{ marginLeft: "5px" }}>
+              <Link href={`/todo/${todo?._id}`}>
+                <EyeOpenIcon />
+              </Link>
+            </Button>
+          </div>
         </Card>
       ))}
     </div>
