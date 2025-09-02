@@ -1,4 +1,4 @@
-import { Badge } from "@radix-ui/themes";
+import { Badge, CheckboxGroup, RadioGroup, Text } from "@radix-ui/themes";
 
 export const generateId = (pre: string) => {
   return `${pre}-${Math.random().toString(36).substr(2, 9)}`;
@@ -106,5 +106,44 @@ export const renderPriority = (priority: string) => {
     <Badge color={color}>
       {title.charAt(0).toUpperCase() + title.slice(1)}
     </Badge>
+  );
+};
+
+export const renderTagsElement = (selectedValue, setSelectedValue) => {
+  return (
+    <>
+      <CheckboxGroup.Root
+        name="tags"
+        value={selectedValue}
+        onValueChange={(newValues) => setSelectedValue(newValues)}
+      >
+        <Text as="div" size="2" mb="1" weight="bold">
+          Tags:
+        </Text>
+        <CheckboxGroup.Item value="Frontend">Frontend</CheckboxGroup.Item>
+        <CheckboxGroup.Item value="QA">QA</CheckboxGroup.Item>
+        <CheckboxGroup.Item value="Devops">Devops</CheckboxGroup.Item>
+        <CheckboxGroup.Item value="UI">UI</CheckboxGroup.Item>
+      </CheckboxGroup.Root>
+    </>
+  );
+};
+
+export const renderPriorityElement = (inputValue, handleRadioChange) => {
+  return (
+    <>
+      <RadioGroup.Root
+        name="priority"
+        value={inputValue?.priority}
+        onValueChange={handleRadioChange}
+      >
+        <Text as="div" size="2" mb="1" weight="bold">
+          Priority:
+        </Text>
+        <RadioGroup.Item value="1">High</RadioGroup.Item>
+        <RadioGroup.Item value="2">Medium</RadioGroup.Item>
+        <RadioGroup.Item value="3">Low</RadioGroup.Item>
+      </RadioGroup.Root>
+    </>
   );
 };

@@ -6,20 +6,17 @@ import {
   AlertDialog,
   Button,
   Card,
-  CheckboxGroup,
   Container,
-  Dialog,
   Flex,
   Heading,
-  RadioGroup,
   Text,
-  TextArea,
-  TextField,
 } from "@radix-ui/themes";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { renderPriority, renderTags } from "@/components/utils/constant";
+import UpdateDialog from "./update-dialog";
+import DeleteDialog from "./delete-dialog";
 
 interface TodoItem {
   _id: string;
@@ -30,15 +27,16 @@ interface TodoItem {
   priority: string;
 }
 
-const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
-  const id = params.id;
+const ViewAndUpdateTodo = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = React.use(params);
+
   const router = useRouter();
 
   const [inputValue, setInputValue] = useState<TodoItem | null>(null);
   const [selectedValue, setSelectedValue] = useState<string[]>([]);
   const [todos, setTodos] = useState<TodoItem[]>([]);
-  const [open, setOpen] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [initialValue, setInitialValue] = useState<TodoItem | null>(null);
 
   useEffect(() => {
@@ -147,7 +145,6 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
             <Text size={"1"} color="blue">
               TDL#{inputValue?._id}
             </Text>
-
             <Text>Name: {inputValue?.name}</Text>
             <Text>Description: {inputValue?.description}</Text>
             <Flex gap="2">Tags: {renderTags(selectedValue)}</Flex>
@@ -176,117 +173,26 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
               <TrashIcon />
             </Button>
 
-            {/* Delete Dialog */}
-            <AlertDialog.Root open={openAlert} onOpenChange={setOpenAlert}>
-              <AlertDialog.Content maxWidth="450px">
-                <AlertDialog.Title>
-                  Ticket#{inputValue?._id} will be deleted
-                </AlertDialog.Title>
-                <AlertDialog.Description size="2">
-                  Are you sure? This ticket will be deleted.
-                </AlertDialog.Description>
-
-                <Flex gap="3" mt="4" justify="end">
-                  <AlertDialog.Cancel>
-                    <Button variant="soft" color="gray">
-                      Cancel
-                    </Button>
-                  </AlertDialog.Cancel>
-                  <AlertDialog.Action>
-                    <Button
-                      variant="solid"
-                      color="red"
-                      onClick={() => handleDelete(inputValue._id)}
-                    >
-                      Delete
-                    </Button>
-                  </AlertDialog.Action>
-                </Flex>
-              </AlertDialog.Content>
-            </AlertDialog.Root>
+            <DeleteDialog
+              openAlert={openAlert}
+              setOpenAlert={setOpenAlert}
+              inputValue={inputValue}
+              handleDelete={handleDelete}
+            />
           </div>
         </Card>
       </Container>
-      {/* For update */}
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Content maxWidth="450px">
-          <Dialog.Title>Update Todo</Dialog.Title>
-          <Dialog.Description size="2" mb="4">
-            Edit and save the todo!
-          </Dialog.Description>
-
-          <Flex direction="column" gap="3">
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                TDL#{inputValue._id}
-              </Text>
-              <TextField.Root
-                name="id"
-                value={inputValue._id.toString()}
-                disabled
-              />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Name
-              </Text>
-              <TextField.Root
-                placeholder="Enter name"
-                name="name"
-                onChange={handleChange}
-                value={inputValue.name}
-              />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Description
-              </Text>
-              <TextArea
-                placeholder="Enter Description"
-                name="description"
-                onChange={handleChange}
-                value={inputValue.description}
-              />
-            </label>
-            <CheckboxGroup.Root
-              name="tags"
-              value={selectedValue}
-              onValueChange={(newValues) => setSelectedValue(newValues)}
-            >
-              <Text as="div" size="2" mb="1" weight="bold">
-                Tags:
-              </Text>
-              <CheckboxGroup.Item value="Frontend">Frontend</CheckboxGroup.Item>
-              <CheckboxGroup.Item value="QA">QA</CheckboxGroup.Item>
-              <CheckboxGroup.Item value="Devops">Devops</CheckboxGroup.Item>
-              <CheckboxGroup.Item value="UI">UI</CheckboxGroup.Item>
-            </CheckboxGroup.Root>
-            <RadioGroup.Root
-              name="priority"
-              value={inputValue?.priority}
-              onValueChange={handleRadioChange}
-            >
-              <Text as="div" size="2" mb="1" weight="bold">
-                Priority:
-              </Text>
-              <RadioGroup.Item value="1">High</RadioGroup.Item>
-              <RadioGroup.Item value="2">Medium</RadioGroup.Item>
-              <RadioGroup.Item value="3">Low</RadioGroup.Item>
-            </RadioGroup.Root>
-          </Flex>
-
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <Button variant="soft" color="gray" onClick={handleCancelButton}>
-                Cancel
-              </Button>
-            </Dialog.Close>
-            <Dialog.Close>
-              <Button onClick={handleUpdate}>Update</Button>
-            </Dialog.Close>
-          </Flex>
-        </Dialog.Content>
-      </Dialog.Root>
+      <UpdateDialog
+        open={open}
+        setOpen={setOpen}
+        inputValue={inputValue}
+        handleChange={handleChange}
+        selectedValue={selectedValue}
+        setSelectedValue={setSelectedValue}
+        handleRadioChange={handleRadioChange}
+        handleCancelButton={handleCancelButton}
+        handleUpdate={handleUpdate}
+      />
     </>
   );
 };

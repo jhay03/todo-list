@@ -14,6 +14,7 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { TodoItem } from "../utils/interface/ToDoItem";
 import axios from "axios";
 import { TodoType } from "@/app/page";
+import { renderPriorityElement, renderTagsElement } from "../utils/constant";
 
 const initialTodo: TodoItem = {
   name: "",
@@ -110,29 +111,8 @@ const CreateToDo = ({ setTodos }: CreateToDoProps) => {
               value={inputValue?.description}
             />
           </label>
-          <CheckboxGroup.Root
-            name="tags"
-            onValueChange={(selectedTags) => {
-              setSelectedValue(selectedTags);
-            }}
-            value={selectedValue}
-          >
-            <Text as="div" size="2" mb="1" weight="bold">
-              Tags:
-            </Text>
-            <CheckboxGroup.Item value="Frontend">Frontend</CheckboxGroup.Item>
-            <CheckboxGroup.Item value="QA">QA</CheckboxGroup.Item>
-            <CheckboxGroup.Item value="Devops">Devops</CheckboxGroup.Item>
-            <CheckboxGroup.Item value="UI">UI</CheckboxGroup.Item>
-          </CheckboxGroup.Root>
-          <RadioGroup.Root name="priority" onValueChange={handleRadioChange}>
-            <Text as="div" size="2" mb="1" weight="bold">
-              Priority:
-            </Text>
-            <RadioGroup.Item value="1">High</RadioGroup.Item>
-            <RadioGroup.Item value="2">Medium</RadioGroup.Item>
-            <RadioGroup.Item value="3">Low</RadioGroup.Item>
-          </RadioGroup.Root>
+          {renderTagsElement(selectedValue, setSelectedValue)}
+          {renderPriorityElement(inputValue, handleRadioChange)}
         </Flex>
 
         <Flex gap="3" mt="4" justify="end">
