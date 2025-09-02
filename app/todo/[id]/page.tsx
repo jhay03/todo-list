@@ -144,7 +144,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
               TDL#{inputValue?._id}
             </Text>
 
-            <Text>Title: {inputValue?.name}</Text>
+            <Text>Name: {inputValue?.name}</Text>
             <Text>Description: {inputValue?.description}</Text>
             <Flex gap="2">Tags: {renderTags(selectedValue)}</Flex>
             <Text gap="2">
@@ -188,7 +188,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Title
+                Name
               </Text>
               <TextField.Root
                 placeholder="Enter name"
@@ -218,7 +218,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
               </Text>
               <CheckboxGroup.Item value="Frontend">Frontend</CheckboxGroup.Item>
               <CheckboxGroup.Item value="QA">QA</CheckboxGroup.Item>
-              <CheckboxGroup.Item value="Devops">Dev-ops</CheckboxGroup.Item>
+              <CheckboxGroup.Item value="Devops">Devops</CheckboxGroup.Item>
               <CheckboxGroup.Item value="UI">UI</CheckboxGroup.Item>
             </CheckboxGroup.Root>
             <RadioGroup.Root
