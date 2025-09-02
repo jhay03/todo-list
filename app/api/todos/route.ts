@@ -49,29 +49,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-export async function DELETE(req: NextRequest) {
-  try {
-    const { _id } = await req.json();
-    if (!_id) {
-      return NextResponse.json(
-        { message: "Missing required fields _id" },
-        { status: 400 }
-      );
-    }
-
-    await connectToMongoDB();
-    const deleted = await TodoItem.findByIdAndDelete(_id);
-
-    if (!deleted) {
-      return NextResponse.json({ message: "_id not found " }, { status: 404 });
-    }
-    return NextResponse.json({ message: "Todo deleted" }, { status: 201 });
-  } catch (error) {
-    console.log(error, "error in DELETE /api/todos");
-    return NextResponse.json(
-      { message: "An error occurred while deleting the todo " },
-      { status: 500 }
-    );
-  }
-}

@@ -105,7 +105,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
 
   const handleDelete = async (id: string | number) => {
     try {
-      await axios.delete("/api/todos", {
+      await axios.delete(`/api/todos/${id}`, {
         data: { _id: id },
       });
       const updatedTodos = todos.filter((todo) => todo._id !== id);
