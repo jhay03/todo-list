@@ -121,7 +121,7 @@ const CreateToDo = ({ setTodos }: CreateToDoProps) => {
             </Text>
             <CheckboxGroup.Item value="Frontend">Frontend</CheckboxGroup.Item>
             <CheckboxGroup.Item value="QA">QA</CheckboxGroup.Item>
-            <CheckboxGroup.Item value="Devops">Dev-ops</CheckboxGroup.Item>
+            <CheckboxGroup.Item value="Devops">Devops</CheckboxGroup.Item>
             <CheckboxGroup.Item value="UI">UI</CheckboxGroup.Item>
           </CheckboxGroup.Root>
           <RadioGroup.Root name="priority" onValueChange={handleRadioChange}>

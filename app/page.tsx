@@ -1,7 +1,6 @@
 "use client";
 import CreateToDo from "@/components/todo/create";
 import ListOfTodo from "@/components/todo/list";
-import { mockTodos } from "@/components/utils/constant";
 import { Flex, Text, Container, Heading, Badge } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,15 +10,16 @@ export default function MyApp() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    const count = mockTodos.filter((todo) => todo.completed).length;
-    setCompletedCount(count);
-  }, []);
-
-  useEffect(() => {
     axios.get("/api/todos").then((response: any) => {
       setTodos(response?.data?.todos);
     });
   }, []);
+
+  useEffect(() => {
+    const count = todos.filter((todo: any) => todo?.completed).length;
+    setCompletedCount(count);
+  }, [todos]);
+
   return (
     <Container size={"1"}>
       <Flex direction="column" pb="2" mt="6">

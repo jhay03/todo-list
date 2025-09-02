@@ -50,36 +50,6 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    await connectToMongoDB();
-
-    const todo = await TodoItem.findById(params.id);
-
-    if (!todo) {
-      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
-    }
-
-    // Toggle the completed status
-    todo.completed = !todo.completed;
-    await todo.save();
-
-    return NextResponse.json(
-      { message: "Todo updated", todo },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error in PATCH /api/todos/[id]/complete:", error);
-    return NextResponse.json(
-      { message: "Error updating todo" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function DELETE(req: Request) {
   try {
     const { _id } = await req.json();
@@ -100,7 +70,7 @@ export async function DELETE(req: Request) {
   } catch (error) {
     console.log(error, "error in DELETE /api/todos");
     return NextResponse.json(
-      { message: "An error occurred while deleting the doctor " },
+      { message: "An error occurred while deleting the todo " },
       { status: 500 }
     );
   }

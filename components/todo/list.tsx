@@ -1,65 +1,10 @@
 "use client";
-import { Badge, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Button, Card, Flex, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { TodoItem } from "../utils/interface/ToDoItem";
+import { renderPriority, renderTags } from "../utils/constant";
+import axios from "axios";
 
-export const renderTags = (tags: string[]) => {
-  return tags.map((tag) => {
-    let color = "gray";
-    let tagValue = "";
-    switch (tag.toLowerCase()) {
-      case "frontend":
-        color = "cyan";
-        tagValue = "Frontend";
-        break;
-      case "dev-ops":
-        color = "orange";
-        tagValue = "DevOps";
-        break;
-      case "ui":
-        color = "blue";
-        tagValue = "UI";
-        break;
-      case "qa":
-        color = "green";
-        tagValue = "QA";
-        break;
-      default:
-        color = "gray";
-    }
-    return (
-      <Badge key={tag} color={color}>
-        {tag}
-      </Badge>
-    );
-  });
-};
-
-export const renderPriority = (priority: string) => {
-  let color = "gray";
-  let title = "";
-  switch (priority.toLowerCase()) {
-    case "1":
-      color = "red";
-      title = "High";
-      break;
-    case "2":
-      color = "yellow";
-      title = "Medium";
-      break;
-    case "3":
-      color = "green";
-      title = "Low";
-      break;
-    default:
-      color = "gray";
-  }
-  return (
-    <Badge color={color}>
-      {title.charAt(0).toUpperCase() + title.slice(1)}
-    </Badge>
-  );
-};
 const ListOfTodo = ({
   items,
   setTodos,
@@ -67,12 +12,25 @@ const ListOfTodo = ({
   items: TodoItem[];
   setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
 }) => {
-  const handleCompleted = (id: string | number) => {
-    setTodos((prevTasks) =>
-      prevTasks.map((todos) =>
-        todos._id === id ? { ...todos, completed: !todos.completed } : todos
-      )
-    );
+  const handleCompleted = async (id: string) => {
+    const currentTodo = items.find((todo) => todo._id === id);
+    if (!currentTodo) return;
+
+    const newCompletedStatus = !currentTodo.completed;
+
+    try {
+      const response = await axios.put(`/api/todos/${id}`, {
+        completed: newCompletedStatus,
+      });
+
+      const updatedTodo = response.data.todo;
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => (todo._id === id ? updatedTodo : todo))
+      );
+    } catch (error) {
+      console.error("Error updating completed status:", error);
+    }
   };
 
   return (
@@ -89,10 +47,8 @@ const ListOfTodo = ({
             </Text>
             <Text>Name: {todo?.name}</Text>
             <Text>Description: {todo?.description}</Text>
-            <Flex gap="2">Tags: {renderTags(todo?.tags || [])}</Flex>
-            <Text gap="2">
-              Priority: {renderPriority(todo?.priority || "")}
-            </Text>
+            <Flex gap="2">Tags: {renderTags(todo?.tags)}</Flex>
+            <Text gap="2">Priority: {renderPriority(todo?.priority)}</Text>
           </Flex>
           <Button
             mt="2"

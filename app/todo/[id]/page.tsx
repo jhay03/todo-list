@@ -1,6 +1,5 @@
 "use client";
 
-import { renderPriority, renderTags } from "@/components/todo/list";
 import { useRouter } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
@@ -19,6 +18,7 @@ import {
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState, use } from "react";
+import { renderPriority, renderTags } from "@/components/utils/constant";
 
 interface TodoItem {
   _id: string;
@@ -44,6 +44,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
       setTodos(response?.data?.todos);
     });
   }, []);
+
   useEffect(() => {
     const foundTodo = todos.find((todo: TodoItem) => todo._id === id);
     if (foundTodo) {
@@ -54,13 +55,11 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
         name: foundTodo.name,
       });
       setSelectedValue([...foundTodo.tags]);
-    } else {
-      console.warn("Todo not found with ID:", id);
     }
-  }, [id, todos]); // ✅ add `todos` here
+  }, [id, todos]);
 
   const handleRadioChange = (val: string) => {
-    setInputValue((prev) => ({
+    setInputValue((prev: any) => ({
       ...prev,
       priority: val,
     }));
@@ -71,15 +70,35 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
     setInputValue((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!inputValue) return;
 
     const updatedTodo = {
-      ...inputValue,
+      name: inputValue.name,
+      description: inputValue.description,
       tags: selectedValue,
+      completed: inputValue.completed,
       priority: inputValue.priority,
     };
-    console.log("Updated Todo:", updatedTodo);
+
+    try {
+      const response = await axios.patch(
+        `/api/todos/${inputValue._id}`,
+        updatedTodo
+      );
+      const updatedFromServer = response.data.todo;
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo._id === updatedFromServer._id ? updatedFromServer : todo
+        )
+      );
+      setInputValue(updatedFromServer);
+      setSelectedValue([...updatedFromServer.tags]);
+      setOpen(false);
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
   };
 
   if (!inputValue) return null;
@@ -127,7 +146,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
 
             <Text>Title: {inputValue?.name}</Text>
             <Text>Description: {inputValue?.description}</Text>
-            <Flex gap="2">Tags: {renderTags(inputValue?.tags || [])}</Flex>
+            <Flex gap="2">Tags: {renderTags(selectedValue)}</Flex>
             <Text gap="2">
               Priority: {renderPriority(inputValue?.priority)}
             </Text>
