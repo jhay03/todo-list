@@ -1,8 +1,12 @@
 import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
 import { NextResponse, NextRequest } from "next/server";
+import type { RouteContext } from "@/types"; // Adjust path as needed
 
-export async function GET() {
+export async function GET(
+  _req: NextRequest,
+  _context: RouteContext<"/api/todos">
+) {
   try {
     await connectToMongoDB();
     const todos = await TodoItem.find().sort({ priority: 1, name: 1 });
@@ -15,7 +19,11 @@ export async function GET() {
     );
   }
 }
-export async function POST(req: NextRequest) {
+
+export async function POST(
+  req: NextRequest,
+  _context: RouteContext<"/api/todos">
+) {
   try {
     const body = await req.json();
     const { name, description, tags, completed, priority } = body;

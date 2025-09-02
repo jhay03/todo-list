@@ -1,13 +1,14 @@
 import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
 import { NextResponse, NextRequest } from "next/server";
+import type { RouteContext } from "@/types"; // Adjust if needed
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext<"/api/todos/[id]">
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await req.json();
     const { name, description, tags, completed, priority } = body;
 
@@ -45,14 +46,10 @@ export async function PATCH(
 
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } } | { params: Promise<{ id: string }> }
+  context: RouteContext<"/api/todos/[id]">
 ) {
   try {
-    // Await params in case it's a Promise
-    const params =
-      "then" in context.params ? await context.params : context.params;
-    const { id } = params;
-
+    const { id } = await context.params;
     const body = await req.json();
     const { completed } = body;
 
@@ -88,27 +85,25 @@ export async function PUT(
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest,
+  context: RouteContext<"/api/todos/[id]">
+) {
   try {
-    const { _id } = await req.json();
-    if (!_id) {
-      return NextResponse.json(
-        { message: "Missing required fields _id" },
-        { status: 400 }
-      );
-    }
+    const { id } = await context.params;
 
     await connectToMongoDB();
-    const deleted = await TodoItem.findByIdAndDelete(_id);
+    const deleted = await TodoItem.findByIdAndDelete(id);
 
     if (!deleted) {
-      return NextResponse.json({ message: "_id not found " }, { status: 404 });
+      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: "Todo deleted" }, { status: 201 });
+
+    return NextResponse.json({ message: "Todo deleted" }, { status: 200 });
   } catch (error) {
-    console.log(error, "error in DELETE /api/todos");
+    console.error("[TODO_DELETE_ERROR]", error);
     return NextResponse.json(
-      { message: "An error occurred while deleting the todo " },
+      { message: "An error occurred while deleting the todo" },
       { status: 500 }
     );
   }
