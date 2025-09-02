@@ -1,10 +1,8 @@
 "use client";
 import {
   Button,
-  CheckboxGroup,
   Dialog,
   Flex,
-  RadioGroup,
   Text,
   TextArea,
   TextField,
@@ -31,7 +29,7 @@ type CreateToDoProps = {
 const CreateToDo = ({ setTodos }: CreateToDoProps) => {
   const [inputValue, setInputValue] = useState(initialTodo);
   const [selectedValue, setSelectedValue] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!open) {
