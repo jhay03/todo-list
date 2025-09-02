@@ -109,5 +109,3 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
-
-export default { PATCH, PUT, DELETE };
