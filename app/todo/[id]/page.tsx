@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
   Button,
   Card,
@@ -131,15 +131,6 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
             textDecoration: inputValue.completed ? "line-through" : "none",
           }}
         >
-          <div>
-            <Button
-              variant="solid"
-              style={{ float: "right" }}
-              onClick={() => setOpen(true)}
-            >
-              Update TDL#{id}
-            </Button>
-          </div>
           <Flex gap="1" direction="column">
             <Text size={"1"} color="blue">
               TDL#{inputValue?._id}
@@ -155,15 +146,24 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
               Back
             </Button>
           </Link>
-          <Button
-            color="red"
-            style={{ float: "right" }}
-            mt="2"
-            variant="outline"
-            onClick={() => handleDelete(inputValue._id)}
-          >
-            <TrashIcon />
-          </Button>
+          <div style={{ float: "right", marginTop: "10px" }}>
+            <Button
+              color="green"
+              variant="outline"
+              onClick={() => setOpen(true)}
+              mr="2"
+            >
+              <Pencil1Icon />
+            </Button>
+            <Button
+              color="red"
+              style={{ float: "right" }}
+              variant="outline"
+              onClick={() => handleDelete(inputValue._id)}
+            >
+              <TrashIcon />
+            </Button>
+          </div>
         </Card>
       </Container>
       {/* For update */}
