@@ -45,10 +45,14 @@ export async function PATCH(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } } | { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await params in case it's a Promise
+    const params =
+      "then" in context.params ? await context.params : context.params;
     const { id } = params;
+
     const body = await req.json();
     const { completed } = body;
 
