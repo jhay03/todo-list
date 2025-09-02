@@ -2,12 +2,34 @@ import { connectToMongoDB } from "@/lib/database";
 import TodoItem from "@/models/list_of_todo";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    await connectToMongoDB();
+    const { id } = await context.params;
+
+    const todo = await TodoItem.findById(id);
+    if (!todo) {
+      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+    }
+    return NextResponse.json({ todo }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching todo:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params;
     const body = await req.json();
     const { name, description, tags, completed, priority } = body;
 
@@ -45,10 +67,10 @@ export async function PATCH(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await req.json();
     const { completed } = body;
 

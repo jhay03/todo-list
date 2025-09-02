@@ -4,14 +4,12 @@ import Link from "next/link";
 import { TodoItem } from "../utils/interface/ToDoItem";
 import { renderPriority, renderTags } from "../utils/constant";
 import axios from "axios";
-
-const ListOfTodo = ({
-  items,
-  setTodos,
-}: {
-  items: TodoItem[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
-}) => {
+import { TodoType } from "@/app/page";
+type ListOfTodoProps = {
+  items: TodoType[];
+  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
+};
+const ListOfTodo = ({ items, setTodos }: ListOfTodoProps) => {
   const handleCompleted = async (id: string) => {
     const currentTodo = items.find((todo) => todo._id === id);
     if (!currentTodo) return;
@@ -48,13 +46,13 @@ const ListOfTodo = ({
             <Text>Name: {todo?.name}</Text>
             <Text>Description: {todo?.description}</Text>
             <Flex gap="2">Tags: {renderTags(todo?.tags)}</Flex>
-            <Text gap="2">Priority: {renderPriority(todo?.priority)}</Text>
+            <Text>Priority: {renderPriority(todo?.priority)}</Text>
           </Flex>
           <Button
             mt="2"
             variant={todo?.completed ? "solid" : "outline"}
             size="2"
-            onClick={() => handleCompleted(todo?._id)}
+            onClick={() => handleCompleted(todo?._id || "")}
           >
             {todo?.completed ? "Mark as Inprogress" : "Mark as Done"}
           </Button>

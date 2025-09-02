@@ -17,7 +17,7 @@ import {
 } from "@radix-ui/themes";
 import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState, use } from "react";
+import React, { useEffect, useState } from "react";
 import { renderPriority, renderTags } from "@/components/utils/constant";
 
 interface TodoItem {
@@ -30,8 +30,7 @@ interface TodoItem {
 }
 
 const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
-  const unwrappedParams = use(params);
-  const id = unwrappedParams.id;
+  const id = params.id;
   const router = useRouter();
 
   const [inputValue, setInputValue] = useState<TodoItem | null>(null);
@@ -65,7 +64,9 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
     }));
   };
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setInputValue((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
@@ -147,9 +148,7 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
             <Text>Name: {inputValue?.name}</Text>
             <Text>Description: {inputValue?.description}</Text>
             <Flex gap="2">Tags: {renderTags(selectedValue)}</Flex>
-            <Text gap="2">
-              Priority: {renderPriority(inputValue?.priority)}
-            </Text>
+            <Text>Priority: {renderPriority(inputValue?.priority)}</Text>
           </Flex>
           <Link href={"/"}>
             <Button variant="outline" mt="3">
@@ -160,8 +159,8 @@ const ViewAndUpdateTodo = ({ params }: { params: { id: string } }) => {
             color="red"
             style={{ float: "right" }}
             mt="2"
+            variant="outline"
             onClick={() => handleDelete(inputValue._id)}
-            variant="primary"
           >
             <TrashIcon />
           </Button>

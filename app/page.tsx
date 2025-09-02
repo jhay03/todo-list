@@ -6,9 +6,19 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NoTodo from "@/components/todo/no-todo";
 
+export type TodoType = {
+  _id: string;
+  name: string;
+  description: string;
+  tags: Array<"Frontend" | "QA" | "UI" | "Devops">;
+  completed: boolean;
+  priority: "1" | "2" | "3";
+  createdAt?: string;
+  updatedAt?: string;
+};
 export default function MyApp() {
   const [completedCount, setCompletedCount] = useState<number>(0);
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
 
   useEffect(() => {
     axios.get("/api/todos").then((response: any) => {

@@ -10,9 +10,10 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { TodoItem } from "../utils/interface/ToDoItem";
 import axios from "axios";
+import { TodoType } from "@/app/page";
 
 const initialTodo: TodoItem = {
   name: "",
@@ -22,9 +23,9 @@ const initialTodo: TodoItem = {
   priority: "",
 };
 
-interface CreateToDoProps {
-  setTodos: () => void;
-}
+type CreateToDoProps = {
+  setTodos: Dispatch<SetStateAction<TodoType[]>>;
+};
 
 const CreateToDo = ({ setTodos }: CreateToDoProps) => {
   const [inputValue, setInputValue] = useState(initialTodo);
