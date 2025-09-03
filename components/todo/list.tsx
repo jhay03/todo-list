@@ -5,7 +5,6 @@ import { TodoItem } from "../utils/interface/ToDoItem";
 import { renderPriority, renderTags } from "../utils/constant";
 import axios from "axios";
 import { TodoType } from "@/app/page";
-import { EyeOpenIcon } from "@radix-ui/react-icons";
 type ListOfTodoProps = {
   items: TodoType[];
   setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
@@ -57,11 +56,15 @@ const ListOfTodo = ({ items, setTodos }: ListOfTodoProps) => {
             >
               {todo?.completed ? "Mark as Inprogress" : "Mark as Done"}
             </Button>
-            <Button color="blue" variant="solid" style={{ marginLeft: "5px" }}>
-              <Link href={`/todo/${todo?._id}`}>
-                <EyeOpenIcon />
-              </Link>
-            </Button>
+            <Link href={`/todo/${todo?._id}`}>
+              <Button
+                color="blue"
+                variant="outline"
+                style={{ marginLeft: "5px" }}
+              >
+                View Ticket
+              </Button>
+            </Link>
           </div>
         </Card>
       ))}
