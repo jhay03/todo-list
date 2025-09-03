@@ -45,10 +45,10 @@ const UpdateDialog = ({
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Name
+                Title
               </Text>
               <TextField.Root
-                placeholder="Enter name"
+                placeholder="Enter title"
                 name="name"
                 onChange={handleChange}
                 value={inputValue?.name}

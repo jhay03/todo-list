@@ -2,15 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
-import {
-  AlertDialog,
-  Button,
-  Card,
-  Container,
-  Flex,
-  Heading,
-  Text,
-} from "@radix-ui/themes";
+import { Button, Card, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -145,7 +137,7 @@ const ViewAndUpdateTodo = ({ params }: { params: Promise<{ id: string }> }) => {
             <Text size={"1"} color="blue">
               TDL#{inputValue?._id}
             </Text>
-            <Text>Name: {inputValue?.name}</Text>
+            <Text>Title: {inputValue?.name}</Text>
             <Text>Description: {inputValue?.description}</Text>
             <Flex gap="2">Tags: {renderTags(selectedValue)}</Flex>
             <Text>Priority: {renderPriority(inputValue?.priority)}</Text>

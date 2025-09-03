@@ -43,7 +43,7 @@ const ListOfTodo = ({ items, setTodos }: ListOfTodoProps) => {
             <Text size={"1"} color="blue">
               <Link href={`/todo/${todo?._id}`}>TDL#{todo?._id}</Link>
             </Text>
-            <Text>Name: {todo?.name}</Text>
+            <Text>Title: {todo?.name}</Text>
             <Text>Description: {todo?.description}</Text>
             <Flex gap="2">Tags: {renderTags(todo?.tags)}</Flex>
             <Text>Priority: {renderPriority(todo?.priority)}</Text>
