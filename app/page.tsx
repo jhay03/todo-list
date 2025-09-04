@@ -45,7 +45,7 @@ export default function MyApp() {
             <Text color="gray" style={{ float: "right" }}>
               Completed Tasks : <Badge color="iris"> {completedCount}</Badge>
             </Text>
-            <Text color="red">This is sorted by name and priority</Text>
+            <Text color="red">This is sorted by title and priority</Text>
           </>
         ) : (
           <NoTodo />

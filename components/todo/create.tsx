@@ -24,6 +24,7 @@ const initialTodo: TodoItem = {
 
 type CreateToDoProps = {
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
+  setUpdateTodos: Dispatch<SetStateAction<boolean>>;
 };
 
 const CreateToDo = ({ setTodos, setUpdateTodos }: CreateToDoProps) => {
