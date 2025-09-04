@@ -19,12 +19,13 @@ export type TodoType = {
 export default function MyApp() {
   const [completedCount, setCompletedCount] = useState<number>(0);
   const [todos, setTodos] = useState<TodoType[]>([]);
+  const [updateTodos, setUpdateTodos] = useState<boolean>(0);
 
   useEffect(() => {
     axios.get("/api/todos").then((response: any) => {
       setTodos(response?.data?.todos);
     });
-  }, []);
+  }, [updateTodos]);
 
   useEffect(() => {
     const count = todos.filter((todo: any) => todo?.completed).length;
@@ -36,7 +37,7 @@ export default function MyApp() {
       <Flex direction="column" pb="2" mt="6">
         <Heading>
           To-Do List Application
-          <CreateToDo setTodos={setTodos} />
+          <CreateToDo setTodos={setTodos} setUpdateTodos={setUpdateTodos} />
         </Heading>
         {todos.length > 0 ? (
           <>
@@ -44,6 +45,7 @@ export default function MyApp() {
             <Text color="gray" style={{ float: "right" }}>
               Completed Tasks : <Badge color="iris"> {completedCount}</Badge>
             </Text>
+            <Text color="red">This is sorted by name and priority</Text>
           </>
         ) : (
           <NoTodo />

@@ -26,7 +26,7 @@ type CreateToDoProps = {
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
 };
 
-const CreateToDo = ({ setTodos }: CreateToDoProps) => {
+const CreateToDo = ({ setTodos, setUpdateTodos }: CreateToDoProps) => {
   const [inputValue, setInputValue] = useState(initialTodo);
   const [selectedValue, setSelectedValue] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -66,6 +66,7 @@ const CreateToDo = ({ setTodos }: CreateToDoProps) => {
       .post("/api/todos", dataFromDialog)
       .then((response) => {
         setTodos((prev) => [...prev, response?.data?.todo]);
+        setUpdateTodos((prev) => prev + 1);
       })
       .catch((error) => {
         console.error("Error creating todo:", error);
